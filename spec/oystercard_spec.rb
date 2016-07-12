@@ -6,23 +6,20 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
 
-  # Tests for in_jouney, touch_in and touch_out. THEY MAY CHANGE
-  # AS WE INTRODUCE INSTANCE VARIABLES.
-  it 'in_journey returns false' do
-    expect(subject.in_journey?).to eq false
+  it 'in_journey returns false initially' do
+    expect(subject).not_to be_in_journey
   end
 
-  it 'touch_in changes the result of in_journey? method to true' do
-    expect(subject.touch_in).to be true
+  it 'can touch in' do
+    subject.touch_in
+    expect(subject).to be_in_journey
   end
 
-  it 'touch_out changes the result of in_journey? method false' do
-    expect(subject.touch_out).to eq false
+  it 'can touch out' do
+    subject.touch_in
+    subject.touch_out
+    expect(subject).not_to be_in_journey
   end
-
-
-
-
 
   describe "#top_up" do
     it 'tops up balance' do
