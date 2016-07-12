@@ -22,7 +22,7 @@ class Oystercard
   end
 
   def touch_in
-    in_journey?
+    !in_journey?
   end
 
 end

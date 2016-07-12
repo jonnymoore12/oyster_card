@@ -12,8 +12,12 @@ describe Oystercard do
     expect(subject.in_journey?).to eq false
   end
 
-  it 'touch_in changes the result of in_journey? method ?' do
+  it 'touch_in changes the result of in_journey? method to true' do
     expect(subject.touch_in).to be true
+  end
+
+  it 'touch_out changes the result of in_journey? method false' do
+    expect(subject.touch_out).to eq false
   end
 
 
