@@ -8,10 +8,12 @@ describe Oystercard do
     it 'tops up balance' do
       expect{subject.top_up(10)}.to change {subject.balance}.by 10
     end
-    it 'throws exeption when limit is exceeded' do
-      limit = 150
+
+    it 'trial test' do
+      limit = Oystercard::LIMIT
       subject.top_up(limit)
-      expect{subject.top_up(1)}.to raise_error 'limit reached'
+      expect{subject.top_up(1)}.to raise_error("limit #{limit} reached")
     end
+
   end
 end
