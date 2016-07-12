@@ -1,7 +1,7 @@
 require 'oystercard'
 
 describe Oystercard do
-
+min_fare = Oystercard::MINFARE
   it 'shows card balance' do
     expect(subject.balance).to eq 0
   end
@@ -10,12 +10,22 @@ describe Oystercard do
     expect(subject).not_to be_in_journey
   end
 
-  it 'can touch in' do
-    subject.touch_in
-    expect(subject).to be_in_journey
+  describe '#touch_in' do
+    it 'can touch_in' do
+      subject.top_up(min_fare)
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+
+    context 'balance below minimum fare' do
+      it 'raises error if balance is less than minimum fare' do
+        expect{subject.touch_in}.to raise_error "balance too low"
+      end
+    end
   end
 
   it 'can touch out' do
+    subject.top_up(min_fare)
     subject.touch_in
     subject.touch_out
     expect(subject).not_to be_in_journey
@@ -26,7 +36,7 @@ describe Oystercard do
       expect{subject.top_up(10)}.to change {subject.balance}.by 10
     end
 
-    it 'trial test' do
+    it 'raises error when exceeding top_up limit' do
       limit = Oystercard::LIMIT
       subject.top_up(limit)
       expect{subject.top_up(1)}.to raise_error("limit #{limit} reached")
