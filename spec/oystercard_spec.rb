@@ -24,12 +24,18 @@ min_fare = Oystercard::MINFARE
     end
   end
 
-  it 'can touch out' do
-    subject.top_up(min_fare)
-    subject.touch_in
-    subject.touch_out
-    expect(subject).not_to be_in_journey
-  end
+  describe '#touch_out'
+    it 'deducts the fare when we touch out' do
+      subject.top_up(min_fare)
+      subject.touch_in
+      expect{subject.touch_out}.to change {subject.balance}.by -min_fare
+    end
+    it 'can touch out' do
+      subject.top_up(min_fare)
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
 
   describe "#top_up" do
     it 'tops up balance' do
@@ -43,12 +49,15 @@ min_fare = Oystercard::MINFARE
     end
   end
 
+=begin
+ This is now a private method. No unit tests for private methods.
+ 
   describe "#deduct" do
     it 'deducts the fare amount from balance' do
       subject.top_up(100)
       expect{subject.deduct(50)}.to change {subject.balance}.by -50
     end
-
   end
+=end
 
 end
