@@ -6,9 +6,19 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
 
-  it 'it shows card status' do
-    expect{subject.touch_in}.to change {subject.in_journey?}
+  # Tests for in_jouney, touch_in and touch_out. THEY MAY CHANGE
+  # AS WE INTRODUCE INSTANCE VARIABLES.
+  it 'in_journey returns false' do
+    expect(subject.in_journey?).to eq false
   end
+
+  it 'touch_in changes the result of in_journey? method ?' do
+    expect(subject.touch_in).to be true
+  end
+
+
+
+
 
   describe "#top_up" do
     it 'tops up balance' do
