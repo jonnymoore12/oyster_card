@@ -8,7 +8,9 @@ describe Oystercard do
      expect(subject.balance).to eq 0
  end
 
-let (:station) {double :station}
+let (:entrance_station) {double :station}
+let (:exit_station) {double :station}
+let (:list_of_journeys) { {entrance_station: entrance_station, exit_station: exit_station }}
 
  describe '#top_up' do
    it 'can top up the balance' do
@@ -26,30 +28,53 @@ let (:station) {double :station}
    expect(subject).not_to be_in_journey
   end
 
-  it 'can touch in' do
-   subject.top_up TOP_UP_AMOUNT
-   subject.touch_in :station
-   expect(subject).to be_in_journey
-  end
-
   it 'can touch out' do
     subject.top_up TOP_UP_AMOUNT
-    subject.touch_in :station
-    subject.touch_out
+    subject.touch_in(entrance_station)
+    subject.touch_out(exit_station)
     expect(subject).not_to be_in_journey
   end
 
-  it 'enforces a minimum balance' do
-    expect{subject.touch_in :station}.to raise_error "No credit on card"
-  end
-
   it 'charges on touch out' do
-    expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
+    expect{ subject.touch_out exit_station}.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
   end
 
-  it 'records entry station' do
+  it 'starts with an empty journey' do
+    expect(subject.list_of_journeys).to be_empty
+  end
+
+  it 'logs a journey' do
     subject.top_up TOP_UP_AMOUNT
-    subject.touch_in (station)
-    expect(subject.entry_station).to eq (station)
+    subject.touch_in(entrance_station)
+    subject.touch_out(exit_station)
+    expect(subject.list_of_journeys).to include list_of_journeys
+  end
+
+  it 'stores exit station' do
+    subject.top_up TOP_UP_AMOUNT
+    subject.touch_in(entrance_station)
+    subject.touch_out(exit_station)
+    expect(subject.exit_station).to eq exit_station
+  end
+
+  it 'enforces a minimum balance' do
+    expect{subject.touch_in(entrance_station)}.to raise_error "No credit on card"
+  end
+
+  context 'injourney' do
+
+   before(:each) do
+     subject.top_up TOP_UP_AMOUNT
+     subject.touch_in(entrance_station)
+   end
+
+    it 'can touch in' do
+     expect(subject).to be_in_journey
+    end
+
+    it 'records entry station' do
+      expect(subject.entrance_station).to eq (entrance_station)
+    end
+
   end
 end
