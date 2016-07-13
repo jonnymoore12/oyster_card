@@ -8,9 +8,7 @@ attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
 
   def initialize
     @balance = 0
-    @list_of_journeys = {}
-    @entrance_station
-    @exit_station
+    @list_of_journeys = []
   end
 
   def top_up(amount)
@@ -20,21 +18,13 @@ attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
 
   def touch_in(current_station)
     raise "No credit on card" if no_credit
-    @list_of_journeys[:entrance_station] = current_station
     @entrance_station = current_station
-    @exit_station = nil
   end
-
 
   def touch_out(exit_station)
      deduct(MINIMUM_CREDIT)
-     @list_of_journeys[:exit_station] = exit_station
      @exit_station = exit_station
-     @entrance_station = nil
-  end
-
-  def in_journey?
-     !!@entrance_station
+     store_journey
   end
 
   def no_credit
@@ -42,6 +32,10 @@ attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
   end
 
   private
+
+  def store_journey
+    list_of_journeys << {:entrance_station => @entrance_station, :exit_station => @exit_station}
+  end
 
   def deduct(amount)
     @balance -= amount

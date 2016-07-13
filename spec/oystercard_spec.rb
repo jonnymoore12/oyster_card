@@ -24,17 +24,6 @@ let (:list_of_journeys) { {entrance_station: entrance_station, exit_station: exi
    end
  end
 
-  it 'is initially not in a journey' do
-   expect(subject).not_to be_in_journey
-  end
-
-  it 'can touch out' do
-    subject.top_up TOP_UP_AMOUNT
-    subject.touch_in(entrance_station)
-    subject.touch_out(exit_station)
-    expect(subject).not_to be_in_journey
-  end
-
   it 'charges on touch out' do
     expect{ subject.touch_out exit_station}.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
   end
@@ -61,20 +50,15 @@ let (:list_of_journeys) { {entrance_station: entrance_station, exit_station: exi
     expect{subject.touch_in(entrance_station)}.to raise_error "No credit on card"
   end
 
-  context 'injourney' do
+  context 'in journey' do
 
    before(:each) do
      subject.top_up TOP_UP_AMOUNT
      subject.touch_in(entrance_station)
    end
 
-    it 'can touch in' do
-     expect(subject).to be_in_journey
-    end
-
     it 'records entry station' do
       expect(subject.entrance_station).to eq (entrance_station)
     end
-
   end
 end
