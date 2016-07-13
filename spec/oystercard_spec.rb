@@ -16,7 +16,7 @@ describe Oystercard do
     before(:each) { subject.top_up(Oystercard::LIMIT) }
 
     it "Raises error when top up exceeds limit" do
-      error = "Top up would exceed card limit of £#{Oystercard::LIMIT}"
+      error = "Top up limit £#{Oystercard::LIMIT} would be exceeded"
       expect{ subject.top_up(1) }.to raise_error error
     end
 
@@ -61,9 +61,6 @@ describe Oystercard do
         end
         it "Resets the entry station to nil" do
           expect(subject.entry_station).to be nil
-        end
-        it "Stores the exit station" do
-          expect(subject.exit_station).to be station
         end
         it "Should add journey to journey_history" do
           subject.touch_in(station)
