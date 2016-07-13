@@ -18,32 +18,37 @@ describe Oystercard do
       expect{ subject.top_up(1) }.to raise_error error
     end
 
-    it "Deduct the fare from the card" do
-      expect{ subject.deduct(10) }.to change{ subject.balance }.by -10
-    end
-
     it "Can be touched in" do
       expect(subject.touch_in).to eq true
     end
 
-    it "Can be touched out" do
-      subject.touch_in
-      expect(subject.touch_out).to eq false
+    describe "#touch_out" do
+
+      before(:each) { subject.touch_in }
+
+      it "Can be touched out" do
+        expect(subject.touch_out).to eq false
+      end
+      it "Deducts fare from balance" do
+        subject.touch_out
+        expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MIN_FARE
+      end
+
     end
 
     describe "#in_journey?" do
-      it "knows that we're in_journey after touch_in" do
+      it "Knows that we're in_journey after touch_in" do
         subject.touch_in
         expect(subject).to be_in_journey
       end
 
-      it "knows we're not in_journey after we touch_out" do
+      it "Knows we're not in_journey after we touch_out" do
         subject.touch_in
         subject.touch_out
         expect(subject).to_not be_in_journey
       end
 
-      it "not travelling if card hasn't been used" do
+      it "Not travelling if card hasn't been used" do
         expect(subject).to_not be_in_journey
       end
     end
@@ -54,5 +59,7 @@ describe Oystercard do
     error = 'Insufficient balance'
     expect{ subject.touch_in }.to raise_error error
   end
+
+
 
 end
