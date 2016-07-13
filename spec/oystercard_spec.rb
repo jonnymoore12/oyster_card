@@ -20,13 +20,6 @@ describe Oystercard do
    end
  end
 
-  describe '#deduct' do
-    it 'reduces the balance by specified amount' do
-      subject.top_up TOP_UP_AMOUNT
-      expect{ subject.deduct DEDUCT_AMOUNT}.to change{ subject.balance }.by -DEDUCT_AMOUNT
-    end
-  end
-
   it 'is initially not in a journey' do
    expect(subject).not_to be_in_journey
   end
@@ -47,4 +40,9 @@ describe Oystercard do
   it 'enforces a minimum balance' do
     expect{subject.touch_in}.to raise_error "No credit on card"
   end
+
+  it 'charges on touch out' do
+    expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
+  end
+
 end

@@ -14,10 +14,6 @@ attr_reader :balance
    @balance += amount
   end
 
-  def deduct(amount)
-    @balance -= amount
-  end
-
   def touch_in
     raise "No credit on card" if no_credit
     @in_journey = true
@@ -25,6 +21,7 @@ attr_reader :balance
 
 
   def touch_out
+     deduct(MINIMUM_CREDIT)
      @in_journey = false
   end
 
@@ -34,5 +31,11 @@ attr_reader :balance
 
   def no_credit
     @balance < MINIMUM_CREDIT
+  end
+
+  private
+
+  def deduct(amount)
+    @balance -= amount
   end
 end
