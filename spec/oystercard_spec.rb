@@ -34,18 +34,34 @@ describe Oystercard do
     describe "#touch_out" do
 
       before(:each) { subject.touch_in(station) }
-
+      before(:each) { subject.touch_out(station) }
       it "Can be touched out" do
-        subject.touch_out
         expect(subject.entry_station).to be nil
       end
       it "Deducts fare from balance" do
-        subject.touch_out
-        expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MIN_FARE
+        expect{ subject.touch_out(station) }.to change{ subject.balance }.by -Oystercard::MIN_FARE
       end
       it "Resets the entry station to nil" do
-        subject.touch_out
         expect(subject.entry_station).to be nil
+      end
+      it "Stores the exit station" do
+        expect(subject.exit_station).to be station
+      end
+      it "Should add journey to journey_history" do
+        subject.touch_in(station)
+        expect{ subject.touch_out(station) }.to change{ subject.journey_history.length}.by 1
+      end
+    end
+
+    describe "Journey History" do
+      it "Should be empty on new cards" do
+        expect(subject.journey_history).to be_empty
+      end
+      it "Stores journeys in journey history" do
+        subject.touch_in(station)
+        subject.touch_out(station)
+        journey = {entry_station: station, exit_station: station}
+        expect(subject.journey_history).to include(journey)
       end
 
     end
@@ -58,7 +74,7 @@ describe Oystercard do
 
       it "Knows we're not in_journey after we touch_out" do
         subject.touch_in(station)
-        subject.touch_out
+        subject.touch_out(station)
         expect(subject).to_not be_in_journey
       end
 
@@ -68,6 +84,7 @@ describe Oystercard do
     end
 
   end
+
 
   it "Raises an error when balance is insufficient" do
     error = 'Insufficient balance'
