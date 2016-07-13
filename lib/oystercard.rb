@@ -14,8 +14,8 @@ class Oystercard
     @journey = {}
   end
 
-  def journey(station1, station2)
-    @journey = {entry_station: station1, exit_station: station2}
+  def journey(entry_station, exit_station)
+    @journey = {entry_station: entry_station, exit_station: exit_station}
   end
 
   def top_up(amount)
