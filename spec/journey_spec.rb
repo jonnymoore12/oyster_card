@@ -25,10 +25,39 @@ describe Journey do
     expect(card.journey.list_of_journeys).to include journey
   end
 
-  it 'returns the minimum fare' do
-    expect(subject.fare).to eq Oystercard::MINIMUM_FARE
+  context 'User touches in twice in a row' do
+    before(:each) { card.touch_in entry_station }
+
+    it 'returns the penalty fare for double touch in' do
+      card.touch_in(entry_station)
+      expect(card.journey.fare).to eq Journey::PENALTY_FARE
+    end
+    it 'informs users when they double touch in' do
+      expect(card.touch_in(entry_station)).to eq "You ballsed up your journey"
+    end
   end
 
+  context 'User touches out twice in a row' do
+    before(:each) { card.touch_out entry_station }
+
+    it 'returns the penalty fare for double touch out' do
+      expect(card.journey.fare).to eq Journey::PENALTY_FARE
+    end
+    it 'informs users when they double touch out' do
+      expect(card.touch_out(exit_station)).to eq "You ballsed up your journey"
+    end
+  end
+
+
+  describe '#fare' do
+    it 'returns the minimum fare when there is no penalty' do
+      expect(subject.fare).to eq Oystercard::MINIMUM_FARE
+    end
+  end
+
+
+
+=begin
   context "without touch in or touch out" do
 
     it "returns penalty fare on double touch in" do
@@ -43,5 +72,7 @@ describe Journey do
       expect(card.journey.fare).to eq "Penalty of £#{Journey::PENALTY_FARE} issued"
     end
   end
+
+=end
 
 end

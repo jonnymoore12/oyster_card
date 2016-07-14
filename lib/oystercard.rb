@@ -1,8 +1,11 @@
+require_relative 'journey'
+
 class Oystercard
 
 MAXIMUM_BALANCE = 90
 MINIMUM_CREDIT = 1
 MINIMUM_FARE = 1
+
 
 attr_reader :balance, :journey
 
@@ -18,15 +21,12 @@ attr_reader :balance, :journey
 
   def touch_in(current_station)
     raise "No credit on card" if no_credit
-
     @journey.start_journey(current_station)
-
   end
 
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
+    deduct(journey.fare)
     @journey.end_journey(exit_station)
-
   end
 
   def no_credit
