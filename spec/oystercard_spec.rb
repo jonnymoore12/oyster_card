@@ -26,6 +26,7 @@ let (:exit_station) {double :station}
 
   it "charges a penalty fare for double touch outs" do
     subject.touch_out(exit_station)
+    subject.touch_out(exit_station)
     expect{subject.touch_out(exit_station)}.to change{ subject.balance}.by -Journey::PENALTY_FARE
   end
 

@@ -38,9 +38,10 @@ describe Journey do
   end
 
   context 'User touches out twice in a row' do
-    before(:each) { card.touch_out entry_station }
+    before(:each) { card.touch_out exit_station }
 
     it 'returns the penalty fare for double touch out' do
+      card.touch_out(exit_station)
       expect(card.journey.fare).to eq Journey::PENALTY_FARE
     end
     it 'informs users when they double touch out' do

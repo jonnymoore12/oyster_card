@@ -8,31 +8,33 @@ class Journey
 
   def initialize
     @list_of_journeys = []
-    @valid = true
     @message = ''
+    @entry_count = 0
+    @exit_count = 0
   end
 
 
   def start_journey(entry_station)
     @message = ''
-    penalty_message if @valid == false
+    @exit_count = 0
+    @entry_count += 1
+    penalty_message if @entry_count > 1
     @entry_station = entry_station
-    @valid = false
     @message
   end
 
   def end_journey(exit_station)
     @message = ''
-    penalty_message if @valid == true
+    @entry_count = 0
+    @exit_count += 1
+    penalty_message if @exit_count > 1
     @exit_station = exit_station
-    @valid = true if @valid == false
-    @valid = false if @valid == true
     store_journey
     @message
   end
 
   def fare
-    if @valid == false
+    if @entry_count > 1 || @exit_count > 1
       Journey::PENALTY_FARE
       # Additional method to bring up error message
     else
