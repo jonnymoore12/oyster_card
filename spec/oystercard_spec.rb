@@ -1,7 +1,5 @@
 require 'oystercard'
 
-TOP_UP_AMOUNT = 5
-
 describe Oystercard do
   it 'balance should equal 0' do
     expect(subject.balance).to eq 0
@@ -9,7 +7,6 @@ describe Oystercard do
 
 let (:entrance_station) {double :station}
 let (:exit_station) {double :station}
-let (:list_of_journeys) { {entrance_station: entrance_station, exit_station: exit_station }}
 
   describe '#top_up' do
     it 'can top up the balance' do
@@ -27,37 +24,8 @@ let (:list_of_journeys) { {entrance_station: entrance_station, exit_station: exi
     expect{ subject.touch_out exit_station}.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
   end
 
-  it 'starts with an empty journey' do
-    expect(subject.list_of_journeys).to be_empty
-  end
-
-  it 'logs a journey' do
-    subject.top_up TOP_UP_AMOUNT
-    subject.touch_in(entrance_station)
-    subject.touch_out(exit_station)
-    expect(subject.list_of_journeys).to include list_of_journeys
-  end
-
-  it 'stores exit station' do
-    subject.top_up TOP_UP_AMOUNT
-    subject.touch_in(entrance_station)
-    subject.touch_out(exit_station)
-    expect(subject.exit_station).to eq exit_station
-  end
-
   it 'enforces a minimum balance' do
     expect{subject.touch_in(entrance_station)}.to raise_error "No credit on card"
   end
 
-  context 'in journey' do
-
-   before(:each) do
-     subject.top_up TOP_UP_AMOUNT
-     subject.touch_in(entrance_station)
-   end
-
-    it 'records entry station' do
-      expect(subject.entrance_station).to eq (entrance_station)
-    end
-  end
 end

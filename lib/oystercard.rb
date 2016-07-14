@@ -4,38 +4,36 @@ MAXIMUM_BALANCE = 90
 MINIMUM_CREDIT = 1
 
 
-attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
+attr_reader :balance, :journey
 
-  def initialize
+  def initialize(journey = Journey.new)
     @balance = 0
-    @list_of_journeys = []
+    @journey = journey
   end
 
-   def top_up(amount)
-     fail "Maximum balance of #{MAXIMUM_BALANCE} reached" if balance + amount > MAXIMUM_BALANCE
-     @balance += amount
+  def top_up(amount)
+    fail "Maximum balance of #{MAXIMUM_BALANCE} reached" if balance + amount > MAXIMUM_BALANCE
+    @balance += amount
    end
 
   def touch_in(current_station)
-     raise "No credit on card" if no_credit
-     @entrance_station = current_station
+    raise "No credit on card" if no_credit
+
+    @journey.start_journey(current_station)
+
   end
 
   def touch_out(exit_station)
-     deduct(MINIMUM_CREDIT)
-     @exit_station = exit_station
-     store_journey
+    deduct(MINIMUM_CREDIT)
+    @journey.end_journey(exit_station)
+
   end
 
   def no_credit
-     @balance < MINIMUM_CREDIT
+    @balance < MINIMUM_CREDIT
   end
 
   private
-
-  def store_journey
-    list_of_journeys << {:entrance_station => @entrance_station, :exit_station => @exit_station}
-  end
 
   def deduct(amount)
     @balance -= amount
