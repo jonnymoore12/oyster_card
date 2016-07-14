@@ -8,27 +8,19 @@ class Journey
 
   def initialize
     @list_of_journeys = []
-    @message = ''
     @entry_count = 0
     @exit_count = 0
   end
 
-
   def start_journey(entry_station)
-    @message = ''
-    @exit_count = 0
-    @entry_count += 1
-    penalty_message if @entry_count > 1
-    @entry_station = entry_station
+    set_counters_in entry_station
+    greeting_message
     @message
   end
 
   def end_journey(exit_station)
-    @message = ''
-    @entry_count = 0
-    @exit_count += 1
-    penalty_message if @exit_count > 1
-    @exit_station = exit_station
+    set_counters_out exit_station
+    greeting_message
     store_journey
     @message
   end
@@ -36,11 +28,21 @@ class Journey
   def fare
     if @entry_count > 1 || @exit_count > 1
       Journey::PENALTY_FARE
-      # Additional method to bring up error message
     else
       Oystercard::MINIMUM_FARE
     end
+  end
 
+  def set_counters_in entry_station
+    @exit_count = 0
+    @entry_count += 1
+    @entry_station = entry_station
+  end
+
+  def set_counters_out exit_station
+    @entry_count = 0
+    @exit_count += 1
+    @exit_station = exit_station
   end
 
   private
@@ -49,8 +51,12 @@ class Journey
     @list_of_journeys << {:entry_station => @entry_station, :exit_station => @exit_station}
   end
 
-  def penalty_message
-    @message = "You ballsed up your journey"
+  def greeting_message
+    if @entry_count > 1 || @exit_count > 1
+      @message = "You ballsed up your journey"
+    else
+      @message = "Welcome, have a nice day!"
+    end
   end
 
 end

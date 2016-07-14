@@ -22,6 +22,7 @@ attr_reader :balance, :journey
   def touch_in(current_station)
     raise "No credit on card" if no_credit
     @journey.start_journey(current_station)
+    #deduct(journey.fare)
   end
 
   def touch_out(exit_station)

@@ -24,11 +24,18 @@ let (:exit_station) {double :station}
     expect{ subject.touch_out exit_station}.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
   end
 
+=begin PENDING
+  it "charges a penalty fare for double touch ins" do
+    subject.top_up 50
+    subject.touch_in(entrance_station)
+    expect{subject.touch_in(entrance_station)}.to change{ subject.balance}.by -Journey::PENALTY_FARE
+  end
+
   it "charges a penalty fare for double touch outs" do
-    subject.touch_out(exit_station)
     subject.touch_out(exit_station)
     expect{subject.touch_out(exit_station)}.to change{ subject.balance}.by -Journey::PENALTY_FARE
   end
+=end
 
   it 'enforces a minimum balance' do
     expect{subject.touch_in(entrance_station)}.to raise_error "No credit on card"

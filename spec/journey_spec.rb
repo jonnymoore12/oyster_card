@@ -56,24 +56,15 @@ describe Journey do
     end
   end
 
+  context 'during a normal journey' do
 
-
-=begin
-  context "without touch in or touch out" do
-
-    it "returns penalty fare on double touch in" do
-      card.touch_in(entry_station)
-      card.touch_in(entry_station)
-      expect(card.journey.fare).to eq "Penalty of £#{Journey::PENALTY_FARE} issued"
+    it 'responds with a welcome message' do
+      expect(card.touch_in entry_station).to eq 'Welcome, have a nice day!'
+    end
+    it 'responds with a welcome message' do
+      expect(card.touch_out exit_station).to eq 'Welcome, have a nice day!'
     end
 
-    it "returns penalty fare on double touch in" do
-      card.touch_out(entry_station)
-      card.touch_out(entry_station)
-      expect(card.journey.fare).to eq "Penalty of £#{Journey::PENALTY_FARE} issued"
-    end
   end
-
-=end
 
 end
