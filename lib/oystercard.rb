@@ -11,14 +11,14 @@ attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
     @list_of_journeys = []
   end
 
-  def top_up(amount)
-   fail "Maximum balance of #{MAXIMUM_BALANCE} reached" if balance + amount > MAXIMUM_BALANCE
-   @balance += amount
-  end
+   def top_up(amount)
+     fail "Maximum balance of #{MAXIMUM_BALANCE} reached" if balance + amount > MAXIMUM_BALANCE
+     @balance += amount
+   end
 
   def touch_in(current_station)
-    raise "No credit on card" if no_credit
-    @entrance_station = current_station
+     raise "No credit on card" if no_credit
+     @entrance_station = current_station
   end
 
   def touch_out(exit_station)
@@ -28,7 +28,7 @@ attr_reader :balance, :list_of_journeys, :entrance_station, :exit_station
   end
 
   def no_credit
-    @balance < MINIMUM_CREDIT
+     @balance < MINIMUM_CREDIT
   end
 
   private
