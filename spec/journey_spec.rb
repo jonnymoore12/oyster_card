@@ -25,46 +25,36 @@ describe Journey do
     expect(card.journey.list_of_journeys).to include journey
   end
 
-  context 'User touches in twice in a row' do
-    before(:each) { card.touch_in entry_station }
-
-    it 'returns the penalty fare for double touch in' do
-      card.touch_in(entry_station)
+  context 'User forgets to touch in or out' do
+    it 'charges the penalty fare for double touch in' do
+      2.times { card.touch_in(entry_station) }
       expect(card.journey.fare).to eq Journey::PENALTY_FARE
     end
-    it 'informs users when they double touch in' do
-      expect(card.touch_in(entry_station)).to eq "You ballsed up your journey"
+    it 'charges the penalty fare for double touch out' do
+      2.times { card.touch_out(exit_station) }
+      expect(card.journey.fare).to eq Journey::PENALTY_FARE
     end
   end
 
-  context 'User touches out twice in a row' do
-    before(:each) { card.touch_out exit_station }
+# Should there be some kind of test for greeting_message?
+# It's a private method but it would be nice to test for some
+# kind of output.
 
-    it 'returns the penalty fare for double touch out' do
-      card.touch_out(exit_station)
-      expect(card.journey.fare).to eq Journey::PENALTY_FARE
-    end
+=begin
     it 'informs users when they double touch out' do
       expect(card.touch_out(exit_station)).to eq "You ballsed up your journey"
     end
   end
-
+=end
 
   describe '#fare' do
     it 'returns the minimum fare when there is no penalty' do
       expect(subject.fare).to eq Oystercard::MINIMUM_FARE
     end
-  end
-
-  context 'during a normal journey' do
-
-    it 'responds with a welcome message' do
-      expect(card.touch_in entry_station).to eq 'Welcome, have a nice day!'
+    it 'returns zero when we touch_in to begin a journey' do
+      card.touch_in(entry_station)
+      expect(card.journey.fare).to eq 0
     end
-    it 'responds with a welcome message' do
-      expect(card.touch_out exit_station).to eq 'Welcome, have a nice day!'
-    end
-
   end
 
 end

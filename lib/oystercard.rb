@@ -20,18 +20,14 @@ attr_reader :balance, :journey
    end
 
   def touch_in(current_station)
-    raise "No credit on card" if no_credit
+    fail "No credit on card" if no_credit
     @journey.start_journey(current_station)
-    #deduct(journey.fare)
+    deduct(journey.fare)
   end
 
   def touch_out(exit_station)
-    deduct(journey.fare)
     @journey.end_journey(exit_station)
-  end
-
-  def no_credit
-    @balance < MINIMUM_CREDIT
+    deduct(journey.fare)
   end
 
   private
@@ -39,4 +35,9 @@ attr_reader :balance, :journey
   def deduct(amount)
     @balance -= amount
   end
+
+  def no_credit
+    @balance < MINIMUM_CREDIT
+  end
+
 end
