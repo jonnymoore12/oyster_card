@@ -1,5 +1,7 @@
 require 'oystercard'
 
+TOP_UP_AMOUNT = 10
+
 describe Oystercard do
   it 'balance should equal 0' do
     expect(subject.balance).to eq 0
@@ -19,11 +21,13 @@ describe Oystercard do
     end
   end
 
-  it 'charges on touch out' do
+  it 'charges on touch out under normal use' do
+    subject.top_up(TOP_UP_AMOUNT)
+    subject.touch_in(entry_station)
     expect{ subject.touch_out exit_station}.to change{ subject.balance }.by -Oystercard::MINIMUM_CREDIT
   end
 
-  it "charges a penalty fare for double touch ins" do
+  xit "charges a penalty fare for double touch ins" do
     subject.top_up(Oystercard::MINIMUM_CREDIT)
     subject.touch_in(entry_station)
     expect{subject.touch_in(entry_station)}.to change{ subject.balance}.by -Journey::PENALTY_FARE

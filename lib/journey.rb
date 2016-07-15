@@ -4,46 +4,28 @@ class Journey
 
   PENALTY_FARE = 6
 
-  # Only have the greeting_message instance variable for the sake of test
-  attr_reader :list_of_journeys
+  attr_reader :list_of_journeys, :entry_station, :exit_station
 
   def initialize
     @list_of_journeys = []
-    @entry_count = 0
-    @exit_count = 0
+    @entry_station
+    @exit_station
   end
 
-  def start_journey(entry_station)
-    set_counters_in(entry_station)
+  def start_journey(entry_station = nil)
+    @entry_station = entry_station
     greeting_message
   end
 
-  def end_journey(exit_station)
-    set_counters_out(exit_station)
+  def end_journey(exit_station = nil)
+    @exit_station = exit_station
     greeting_message
     store_journey
   end
 
   def fare
-    if @entry_count > 1 || @exit_count > 1
-      Journey::PENALTY_FARE
-    elsif @entry_count == 1
-      0
-    else
-      Oystercard::MINIMUM_FARE
-    end
-  end
-
-  def set_counters_in entry_station
-    @entry_count += 1
-    @exit_count = 0
-    @entry_station = entry_station
-  end
-
-  def set_counters_out exit_station
-    @entry_count = 0
-    @exit_count += 1
-    @exit_station = exit_station
+    return Journey::PENALTY_FARE if (@entry_station == nil) || (@exit_station == nil)
+    Oystercard::MINIMUM_FARE
   end
 
   private
@@ -53,8 +35,8 @@ class Journey
   end
 
   def greeting_message
-    if @entry_count > 1 || @exit_count > 1
-      p "You ballsed up your journey"
+    if (@entry_station == nil) || (@exit_station == nil)
+      p "You ballsed up your journey to the tune of #{PENALTY_FARE}"
     else
       p "Welcome, have a nice day!"
     end

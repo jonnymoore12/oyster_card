@@ -1,7 +1,7 @@
 require 'journey'
 #require 'pry'
 
-TOP_UP_AMOUNT = 5
+TOP_UP_AMOUNT = 10
 
 describe Journey do
 
@@ -36,24 +36,11 @@ describe Journey do
     end
   end
 
-# Should there be some kind of test for greeting_message?
-# It's a private method but it would be nice to test for some
-# kind of output.
-
-=begin
-    it 'informs users when they double touch out' do
-      expect(card.touch_out(exit_station)).to eq "You ballsed up your journey"
-    end
-  end
-=end
-
   describe '#fare' do
     it 'returns the minimum fare when there is no penalty' do
-      expect(subject.fare).to eq Oystercard::MINIMUM_FARE
-    end
-    it 'returns zero when we touch_in to begin a journey' do
       card.touch_in(entry_station)
-      expect(card.journey.fare).to eq 0
+      card.touch_out(exit_station)
+      expect(card.journey.fare).to eq Oystercard::MINIMUM_FARE
     end
   end
 
